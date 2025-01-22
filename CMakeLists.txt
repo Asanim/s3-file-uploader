@@ -15,6 +15,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
 # Include the AWS SDK CMake script.
 include(${CMAKE_SOURCE_DIR}/scripts/cmake/zlib.cmake)
 include(${CMAKE_SOURCE_DIR}/scripts/cmake/curl.cmake)
+include(${CMAKE_SOURCE_DIR}/scripts/cmake/openssl.cmake)
 include(${CMAKE_SOURCE_DIR}/scripts/cmake/aws-sdk-cpp.cmake) # This is to build the dependencies for sentinel vision ai.
 
 list(PREPEND CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR}/external/install/lib")
@@ -36,6 +37,7 @@ set(TARGET_LINK_LIBRARIES
 
 # Hello S3 List Objects
 add_executable(${PROJECT_NAME} main.cpp)
+add_dependencies(${PROJECT_NAME} aws-sdk-cpp zlib libcurl)
 target_include_directories(${PROJECT_NAME} PRIVATE ${TARGET_INCLUDE_DIRS})
 target_link_directories(${PROJECT_NAME} PRIVATE ${TARGET_LINK_DIRS})
 target_link_libraries(${PROJECT_NAME} ${TARGET_LINK_LIBRARIES})
