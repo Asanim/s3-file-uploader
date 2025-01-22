@@ -6,7 +6,7 @@ This repository was created to address the need for handling multimedia uploads 
 
 For further reference, examples using the AWS SDK can be found in the official documentation repository: [AWS SDK Examples](https://github.com/awsdocs/aws-doc-sdk-examples/tree/main).
 
-By performing the necessary key exchange and ensuring that the edge device has the appropriate IAM permissions, it's possible to write any application using the AWS SDK as a Greengrass component. This project provides a simple command-line C++ application that uploads files from a specified directory to an Amazon S3 bucket.
+In theory, after performing the key exchange it is possible to write any application using the AWS SDK as a Greengrass component, as long as the edge device is configured with the necessary IAM permissions
 
 This repository aims to serve as a guide for those with a similar use case or anyone looking to integrate the AWS SDK with AWS Greengrass using C++.
 
