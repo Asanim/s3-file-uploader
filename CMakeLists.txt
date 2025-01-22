@@ -12,6 +12,11 @@ set(CMAKE_INSTALL_MESSAGE LAZY)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error") # Disable warnings as errors.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
 
+# Include the AWS SDK CMake script.
+include(${CMAKE_SOURCE_DIR}/scripts/cmake/zlib.cmake)
+include(${CMAKE_SOURCE_DIR}/scripts/cmake/curl.cmake)
+include(${CMAKE_SOURCE_DIR}/scripts/cmake/aws-sdk-cpp.cmake) # This is to build the dependencies for sentinel vision ai.
+
 list(PREPEND CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR}/external/install/lib")
 message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
 
