@@ -14,10 +14,10 @@ ExternalProject_Add(
         -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/external/install
         -DZLIB_LIBRARY=${CMAKE_BINARY_DIR}/external/install/lib/libz.so
         -DZLIB_INCLUDE_DIR=${CMAKE_BINARY_DIR}/external/install/include
-        -DOPENSSL_ROOT_DIR=${OPENSSL_ROOT_DIR}
-        -DOPENSSL_INCLUDE_DIR=${OPENSSL_ROOT_DIR}/include
-        -DOPENSSL_CRYPTO_LIBRARY=${OPENSSL_ROOT_DIR}/lib/libcrypto.so
-        -DOPENSSL_SSL_LIBRARY=${OPENSSL_ROOT_DIR}/lib/libssl.so
+        -DOPENSSL_ROOT_DIR=${CMAKE_BINARY_DIR}/external/install
+        -DOPENSSL_INCLUDE_DIR=${CMAKE_BINARY_DIR}/external/install/include
+        -DOPENSSL_CRYPTO_LIBRARY=${CMAKE_BINARY_DIR}/external/install/lib/libcrypto.so
+        -DOPENSSL_SSL_LIBRARY=${CMAKE_BINARY_DIR}/external/install/lib/libssl.so
     PREFIX ${CMAKE_BINARY_DIR}/external/libcurl/prefix
     TMP_DIR ${CMAKE_BINARY_DIR}/external/libcurl/tmp
     STAMP_DIR ${CMAKE_BINARY_DIR}/external/libcurl/stamp
