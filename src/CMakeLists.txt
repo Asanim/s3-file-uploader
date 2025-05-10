@@ -72,8 +72,3 @@ target_link_libraries(${PROJECT_NAME}
     ssl
     crypto
 )
-
-# Install the executable
-install(TARGETS ${PROJECT_NAME}
-    RUNTIME DESTINATION bin
-)

@@ -65,88 +65,52 @@ class S3Client {
   /// \return int Status code indicating success or failure.
   ///
   int CreateClient();
-
-  /// \brief Indicates whether the device has internet connectivity and valid AWS credentials.
-  ///
-  /// When false, uploads are postponed until connectivity is restored.
-  ///
+  // Indicates whether the device has internet connectivity and valid AWS credentials. When false, uploads are postponed until connectivity is restored.
   std::atomic<bool> is_connected_ = false;
 
-  /// \brief Flag indicating whether the AWS SDK has been initialized.
-  ///
-  /// Prevents multiple initialization of the SDK, which can cause issues.
-  ///
+  // Flag indicating whether the AWS SDK has been initialized. Prevents multiple initialization of the SDK, which can cause issues.
   static bool is_sdk_initalized_;
 
-  /// \brief Thread that handles the file upload process.
-  ///
-  /// Runs the MainThread method in a separate thread.
-  ///
+  // Thread that handles the file upload process. Runs the MainThread method in a separate thread.
   std::unique_ptr<std::thread> upload_thread_;
 
-  /// \brief Flag indicating whether the upload thread should continue running.
-  ///
-  /// Used to safely terminate the thread when the S3Client is destroyed.
-  ///
+  // Flag indicating whether the upload thread should continue running. Used to safely terminate the thread when the S3Client is destroyed.
   std::atomic<bool> is_running_ = true;
 
-  /// \brief Client for interacting with AWS S3 service.
-  ///
-  /// Handles all S3 operations, including file uploads.
-  ///
+  // Client for interacting with AWS S3 service. Handles all S3 operations, including file uploads.
   std::shared_ptr<Aws::S3::S3Client> s3_client_;
 
-  /// \brief Provider for AWS credentials used to authenticate with S3.
-  ///
-  /// Supplies access key, secret key, and session token.
+  // Provider for AWS credentials used to authenticate with S3. Supplies access key, secret key, and session token.
   std::shared_ptr<Aws::Auth::AWSCredentialsProvider> credentials_provider_;
 
-  /// \brief Default S3 bucket name for file uploads.
-  ///
-  /// Target bucket where files will be uploaded.
+  // Default S3 bucket name for file uploads. Target bucket where files will be uploaded.
   std::string bucket_name_ = "";
 
-  /// \brief AWS region for the S3 service.
-  ///
-  /// Region where the S3 bucket is located.
+  // AWS region for the S3 service. Region where the S3 bucket is located.
   std::string aws_region_ = "";
 
-  /// \brief The AWS IoT thing name associated with this device.
-  ///
-  /// Used to identify the device and construct S3 object paths.
+  // The AWS IoT thing name associated with this device. Used to identify the device and construct S3 object paths.
   std::string thing_name_ = "";
 
-  /// \brief Endpoint URL for requesting temporary AWS credentials.
-  ///
-  /// Used to obtain credentials for S3 access.
+  // Endpoint URL for requesting temporary AWS credentials. Used to obtain credentials for S3 access.
   std::string credential_endpoint_ = "";
 
-  /// \brief Path to the CA certificate bundle file.
-  ///
-  /// Used for secure HTTPS connections.
+  // Path to the CA certificate bundle file. Used for secure HTTPS connections.
   const std::string kCACertificatePath = "/etc/ssl/certs/ca-bundle.crt";
 
-  /// \brief Path to the IoT thing certificate.
-  ///
-  /// Used for authenticating with AWS IoT.  
+  // Path to the IoT thing certificate. Used for authenticating with AWS IoT.
   const std::string kThingCertPath = "/greengrass/v2/thingCert.crt";
 
-  /// \brief Path to the private key associated with the thing certificate.
-  ///
-  /// Used for authenticating with AWS IoT.
+  // Path to the private key associated with the thing certificate. Used for authenticating with AWS IoT.
   const std::string kPrivateKeyPath = "/greengrass/v2/privKey.key";
 
-  /// \brief Path to the AWS IoT root CA certificate.
-  ///
-  /// Used for verifying the AWS IoT endpoint.
+  // Path to the AWS IoT root CA certificate. Used for verifying the AWS IoT endpoint.
   const std::string kRootCAPath = "/greengrass/v2/rootCA.pem";
 
-  /// \brief Directory to monitor for files to upload.
-  ///
-  /// All files appearing in this directory will be uploaded to S3.
+  // Directory to monitor for files to upload. All files appearing in this directory will be uploaded to S3.
   std::string watch_directory_;
 
-  /// \brief AWS SDK options for configuring logging and other settings.
+  // AWS SDK options for configuring logging and other settings.
   Aws::SDKOptions sdk_options_;
 
 };
