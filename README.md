@@ -4,6 +4,9 @@
 
 This repository was created to address the need for handling multimedia uploads in a purely C++ application running as an AWS Greengrass component. While a similar implementation exists in Python (see [AWS Labs S3 File Uploader](https://github.com/awslabs/aws-greengrass-labs-s3-file-uploader)), this project demonstrates how to achieve the same functionality using C++ with the AWS SDK.
 
+Alternatively, this application may be run from a greengrass device standalone. It uses the greengrass certificates to interact with s3. Note: this application shall have the same permissions as the greengrass device it is run on. Hence, if the greengrass device does not have access to a S3 bucket this application shall not either. Refer to the following documentation for how to enable access: [Device Service Role](https://docs.aws.amazon.com/greengrass/v2/developerguide/device-service-role.html)
+
+
 For further reference, examples using the AWS SDK can be found in the official documentation repository: [AWS SDK Examples](https://github.com/awsdocs/aws-doc-sdk-examples/tree/main).
 
 In theory, after performing the key exchange it is possible to write any application using the AWS SDK as a Greengrass component, as long as the edge device is configured with the necessary IAM permissions
@@ -60,8 +63,8 @@ This repository aims to serve as a guide for those with a similar use case or an
 2. Build the application using CMake:
    ```bash
    mkdir build && cd build
-   cmake ..
-   make
+   cmake -DCMAKE_TOOLCHAIN_FILE=$(pwd)/../scripts/cmake/arm_toolchain.cmake  -DCMAKE_BUILD_TYPE=Debug ..
+   make -j$(nproc -1)
    ```
 
 3. Run the application:
