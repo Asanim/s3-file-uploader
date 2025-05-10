@@ -1,0 +1,27 @@
+Name:           @CPACK_PACKAGE_NAME@
+Version:        @CPACK_PACKAGE_VERSION@
+Release:        @CPACK_PACKAGE_RELEASE@
+Summary:        @CPACK_DEBIAN_PACKAGE_DESCRIPTION@
+License:        Custom
+URL:            @CPACK_DEBIAN_PACKAGE_HOMEPAGE@
+Group:          Applications/System
+Packager:       @CPACK_PACKAGE_CONTACT@
+Vendor:         @CPACK_PACKAGE_VENDOR@
+BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+
+%description
+@CPACK_DEBIAN_PACKAGE_DESCRIPTION@
+
+%prep
+
+%build
+
+%install
+# Installation handled by CPack
+
+%files
+# File list handled by CPack
+
+%changelog
+* $(date +"%a %b %d %Y") @CPACK_PACKAGE_CONTACT@ - @CPACK_PACKAGE_VERSION@-@CPACK_PACKAGE_RELEASE@
+- Initial RPM release

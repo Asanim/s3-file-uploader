@@ -23,6 +23,7 @@ include(${CMAKE_SOURCE_DIR}/scripts/cmake/curl.cmake)
 include(${CMAKE_SOURCE_DIR}/scripts/cmake/openssl.cmake)
 include(${CMAKE_SOURCE_DIR}/scripts/cmake/aws-sdk-cpp.cmake) # This is to build the dependencies for sentinel vision ai.
 include(${CMAKE_SOURCE_DIR}/scripts/cmake/rapidjson.cmake)
+include(${CMAKE_SOURCE_DIR}/scripts/cmake/cpack.cmake)
 
 list(PREPEND CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR}/external/install/lib")
 message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
