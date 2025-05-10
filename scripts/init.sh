@@ -1,8 +1,8 @@
 #!/bin/bash
 SCRIPT_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-    sudo apt-get update
-    sudo apt-get install -y build-essential cmake libcurl4-openssl-dev libssl-dev uuid-dev zlib1g-dev
+sudo apt-get update
+sudo apt-get install -y build-essential cmake libcurl4-openssl-dev libssl-dev uuid-dev zlib1g-dev
 
 # Download and extract the ARM toolchain to the build directory
 
@@ -21,3 +21,6 @@ tar xvf arm-gnu-toolchain-14.2.rel1-x86_64-aarch64-none-linux-gnu.tar.xz -C ${HO
 
 # Install gdk - greengrass development kit
 pip3 install -U git+https://github.com/aws-greengrass/aws-greengrass-gdk-cli.git@v1.6.2
+
+cd $SCRIPT_PATH
+curl -LO https://www.amazontrust.com/repository/AmazonRootCA1.pem
