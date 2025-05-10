@@ -3,12 +3,17 @@ cmake_minimum_required(VERSION 3.13)
 
 # Set the project name.
 project(s3_file_uploader)
+
+# Set C++17 as the required standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Option and message settings.
 option(TRACE OFF)
 set(CMAKE_INSTALL_MESSAGE LAZY)
+
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error") # Disable warnings as errors.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
 
@@ -17,6 +22,7 @@ include(${CMAKE_SOURCE_DIR}/scripts/cmake/zlib.cmake)
 include(${CMAKE_SOURCE_DIR}/scripts/cmake/curl.cmake)
 include(${CMAKE_SOURCE_DIR}/scripts/cmake/openssl.cmake)
 include(${CMAKE_SOURCE_DIR}/scripts/cmake/aws-sdk-cpp.cmake) # This is to build the dependencies for sentinel vision ai.
+include(${CMAKE_SOURCE_DIR}/scripts/cmake/rapidjson.cmake)
 
 list(PREPEND CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR}/external/install/lib")
 message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
@@ -25,8 +31,8 @@ set(AWSSDK_ROOT_DIR "${CMAKE_BINARY_DIR}/external/install")
 message(STATUS "AWSSDK_ROOT_DIR: ${AWSSDK_ROOT_DIR}")
 
 set(TARGET_INCLUDE_DIRS
-    ${CMAKE_BINARY_DIR}/external/install/include/ 
-    ${CMAKE_BINARY_DIR}/external/install/usr/local/include/ 
+    ${CMAKE_BINARY_DIR}/external/install/include/
+    ${CMAKE_BINARY_DIR}/external/install/usr/local/include/
 )
 set(TARGET_LINK_DIRS
     ${CMAKE_BINARY_DIR}/external/install/lib/ # LibCurl
@@ -35,9 +41,4 @@ set(TARGET_LINK_DIRS
 set(TARGET_LINK_LIBRARIES
 )
 
-# Hello S3 List Objects
-add_executable(${PROJECT_NAME} main.cpp)
-add_dependencies(${PROJECT_NAME} aws-sdk-cpp zlib libcurl)
-target_include_directories(${PROJECT_NAME} PRIVATE ${TARGET_INCLUDE_DIRS})
-target_link_directories(${PROJECT_NAME} PRIVATE ${TARGET_LINK_DIRS})
-target_link_libraries(${PROJECT_NAME} ${TARGET_LINK_LIBRARIES})
+add_subdirectory(src)
