@@ -6,14 +6,25 @@ This repository was created to address the need for handling multimedia uploads 
 
 Alternatively, this application may be run from a greengrass device standalone. It uses the greengrass certificates to interact with s3. Note: this application shall have the same permissions as the greengrass device it is run on. Hence, if the greengrass device does not have access to a S3 bucket this application shall not either. Refer to the following documentation for how to enable access: [Device Service Role](https://docs.aws.amazon.com/greengrass/v2/developerguide/device-service-role.html)
 
-
 For further reference, examples using the AWS SDK can be found in the official documentation repository: [AWS SDK Examples](https://github.com/awsdocs/aws-doc-sdk-examples/tree/main).
 
 In theory, after performing the key exchange it is possible to write any application using the AWS SDK as a Greengrass component, as long as the edge device is configured with the necessary IAM permissions
 
 This repository aims to serve as a guide for those with a similar use case or anyone looking to integrate the AWS SDK with AWS Greengrass using C++.
 
----
+## Further Reading
+
+1. [AWS SDK for C++ S3 Examples](https://docs.aws.amazon.com/sdk-for-cpp/v1/developer-guide/examples-s3.html)
+2. [AWS IoT Greengrass V2 Device Authentication](https://docs.aws.amazon.com/greengrass/v2/developerguide/device-auth.html)
+3. [AWS IoT Greengrass V2 Component Recipe Reference](https://docs.aws.amazon.com/greengrass/v2/developerguide/component-recipe-reference.html)
+
+
+## Notes
+
+- Greengrass component packages are typically installed to the `packages-unarchived` folder, which is managed by the Greengrass core software.
+- In this case, instead of using the default Greengrass package installation location, we install a Debian package (`.dpkg`) directly to the system root directory (`/`).
+- Installing to the system root means the package and its files are available system-wide, outside of the Greengrass-managed environment.
+
 
 ## Features and Goals
 
@@ -22,37 +33,12 @@ This repository aims to serve as a guide for those with a similar use case or an
 - **Multi-Architecture Builds**: Provides a system for building the application for multiple architectures.
 - **Command-Line Usage**: Offers a command-line interface for configuring and running the uploader.
 - **GitHub Pipelines**: Implements automated CI/CD workflows for testing and releases.
-- **Releases**: Distributes pre-built binaries for supported architectures.
+- **Releases**: Distributes pre-built binaries for common architectures.
 - **Unit Testing and Logging**:
   - Utilizes `gtest` for unit testing.
   - Employs `glog` for robust logging and argument parsing.
 
----
-
-## Prerequisites
-
-1. **AWS CLI**:
-   - Ensure the AWS CLI is installed and configured with the necessary credentials.
-   - Register your AWS credentials using the following command:
-     ```bash
-     aws configure
-     ```
-
-2. **AWS Greengrass**:
-   - Set up an AWS Greengrass environment with an edge device configured with the necessary IAM permissions to access S3.
-
-3. **AWS SDK**:
-   - Install and configure the AWS SDK for C++.
-
-4. **Development Tools**:
-   - CMake (for build configuration)
-   - A compatible C++ compiler (e.g., GCC, Clang, or MSVC)
-
----
-
-## Deployment
-
-### Deploying Locally
+## Building 
 
 1. Clone this repository:
    ```bash
@@ -71,6 +57,8 @@ This repository aims to serve as a guide for those with a similar use case or an
    ```bash
    ./s3_file_uploader --bucket <S3_BUCKET_NAME> --directory <DIRECTORY_PATH>
    ```
+
+### Deploying Locally
 
 ### Deploying in the Cloud
 
