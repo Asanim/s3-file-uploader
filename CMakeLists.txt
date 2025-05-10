@@ -27,18 +27,4 @@ include(${CMAKE_SOURCE_DIR}/scripts/cmake/rapidjson.cmake)
 list(PREPEND CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR}/external/install/lib")
 message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
 
-set(AWSSDK_ROOT_DIR "${CMAKE_BINARY_DIR}/external/install")
-message(STATUS "AWSSDK_ROOT_DIR: ${AWSSDK_ROOT_DIR}")
-
-set(TARGET_INCLUDE_DIRS
-    ${CMAKE_BINARY_DIR}/external/install/include/
-    ${CMAKE_BINARY_DIR}/external/install/usr/local/include/
-)
-set(TARGET_LINK_DIRS
-    ${CMAKE_BINARY_DIR}/external/install/lib/ # LibCurl
-)
-
-set(TARGET_LINK_LIBRARIES
-)
-
 add_subdirectory(src)
