@@ -8,7 +8,7 @@ ExternalProject_Add(aws-sdk-cpp
     GIT_SUBMODULES_RECURSE 1
     PATCH_COMMAND ${CMAKE_COMMAND} -E chdir ${CMAKE_BINARY_DIR}/external/aws-sdk-cpp/src/crt/aws-crt-cpp git apply ${CMAKE_SOURCE_DIR}/scripts/cmake/patches/aws-sdk-crt-variant.patch
     CMAKE_ARGS
-    -DCMAKE_TOOLCHAIN_FILE=${CMAKE_SOURCE_DIR}/scripts/cmake/arm_toolchain.cmake
+    -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
     -DENABLE_TESTING=OFF
     -DAUTORUN_UNIT_TESTS=OFF
     -DBUILD_ONLY=s3
@@ -28,10 +28,10 @@ ExternalProject_Add(aws-sdk-cpp
 
     # libcrypto settings
     -Dcrypto_INCLUDE_DIR=${CMAKE_BINARY_DIR}/external/install/include
-    -Dcrypto_LIBRARY=${CMAKE_BINARY_DIR}/external/install/lib/libcrypto.so
+    -Dcrypto_LIBRARY=${CMAKE_BINARY_DIR}/external/install/lib/libcrypto.so.3
     -Dcrypto_STATIC_LIBRARY=${CMAKE_BINARY_DIR}/external/install/lib/libcrypto.a
-    -Dcrypto_SHARED_LIBRARY=${CMAKE_BINARY_DIR}/external/install/lib/libcrypto.so
-    -DOPENSSL_CRYPTO_LIBRARY=${CMAKE_BINARY_DIR}/external/install/lib/libcrypto.so
+    -Dcrypto_SHARED_LIBRARY=${CMAKE_BINARY_DIR}/external/install/lib/libcrypto.so.3
+    -DOPENSSL_CRYPTO_LIBRARY=${CMAKE_BINARY_DIR}/external/install/lib/libcrypto.so.3
     -DOPENSSL_INCLUDE_DIR=${CMAKE_BINARY_DIR}/external/install/include
 
     PREFIX ${CMAKE_BINARY_DIR}/external/aws-sdk-cpp/prefix
