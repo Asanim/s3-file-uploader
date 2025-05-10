@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 # Set the project name.
-project(s3_file_uploader)
+project(s3-file-uploader)
 
 # Set C++17 as the required standard
 set(CMAKE_CXX_STANDARD 17)
@@ -32,19 +32,5 @@ message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
 if(NOT DEFINED CPACK_GENERATOR)
     set(CPACK_GENERATOR "DEB")
 endif()
-
-if(CPACK_GENERATOR STREQUAL "TGZ")
-    message(STATUS "Using TGZ packaging")
-    set(CPACK_GENERATOR "TGZ")
-    set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${CMAKE_PROJECT_VERSION}")
-    set(CPACK_SOURCE_GENERATOR "TGZ")
-else()
-    message(STATUS "Using DEB packaging")
-    set(CPACK_GENERATOR "DEB")
-    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Your Name") # Update as needed
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6 (>= 2.27)")
-endif()
-
-include(CPack)
 
 add_subdirectory(src)
