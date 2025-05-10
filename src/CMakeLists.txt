@@ -45,25 +45,25 @@ set(SOURCES
 
 
 # Create executable target
-add_executable(s3_file_uploader ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES})
 
-add_dependencies(s3_file_uploader
+add_dependencies(${PROJECT_NAME}
     aws-sdk-cpp
 )
 
 # Add include directories
-target_include_directories(s3_file_uploader PRIVATE
+target_include_directories(${PROJECT_NAME} PRIVATE
     ${TARGET_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 # Set link directories
-target_link_directories(s3_file_uploader PRIVATE
+target_link_directories(${PROJECT_NAME} PRIVATE
     ${TARGET_LINK_DIRS}
 )
 
 # Link libraries
-target_link_libraries(s3_file_uploader
+target_link_libraries(${PROJECT_NAME}
     ${AWSSDK_LIBRARIES}
     aws-cpp-sdk-s3
     aws-cpp-sdk-core
@@ -74,6 +74,6 @@ target_link_libraries(s3_file_uploader
 )
 
 # Install the executable
-install(TARGETS s3_file_uploader
+install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION bin
 )
