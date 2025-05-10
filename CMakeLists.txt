@@ -28,4 +28,23 @@ include(${CMAKE_SOURCE_DIR}/scripts/cmake/cpack.cmake)
 list(PREPEND CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR}/external/install/lib")
 message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
 
+# Packaging options
+if(NOT DEFINED CPACK_GENERATOR)
+    set(CPACK_GENERATOR "DEB")
+endif()
+
+if(CPACK_GENERATOR STREQUAL "TGZ")
+    message(STATUS "Using TGZ packaging")
+    set(CPACK_GENERATOR "TGZ")
+    set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${CMAKE_PROJECT_VERSION}")
+    set(CPACK_SOURCE_GENERATOR "TGZ")
+else()
+    message(STATUS "Using DEB packaging")
+    set(CPACK_GENERATOR "DEB")
+    set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Your Name") # Update as needed
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6 (>= 2.27)")
+endif()
+
+include(CPack)
+
 add_subdirectory(src)
