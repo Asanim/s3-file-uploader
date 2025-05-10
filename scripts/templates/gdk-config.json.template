@@ -7,7 +7,7 @@
         "build_system": "custom",
         "custom_build_command": [
           "bash",
-          "scripts/build.sh",
+          "$BUILD_SCRIPT_PATH",
           "$COMPONENT_NAME",
           "$COMPONENT_VERSION"
         ]

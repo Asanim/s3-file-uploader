@@ -2,12 +2,10 @@
     "RecipeFormatVersion": "2020-01-25",
     "ComponentName": "$COMPONENT_NAME",
     "ComponentVersion": "$COMPONENT_VERSION",
-    "ComponentDescription": "Sentinel Vision - Personnel proximity detection system for mobile machinery",
+    "ComponentDescription": "S3 File Uploader",
     "ComponentPublisher": "$COMPONENT_AUTHOR",
     "ComponentConfiguration": {
-        "DefaultConfiguration": {
-            }
-        }
+        "DefaultConfiguration": {}
     },
     "Manifests": [
         {
