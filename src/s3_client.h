@@ -5,7 +5,6 @@
 #include <aws/core/auth/AWSCredentialsProvider.h>
 #include <aws/core/auth/AWSCredentialsProviderChain.h>
 #include <aws/core/utils/memory/stl/AWSStringStream.h>
-#include <aws/greengrass/GreengrassCoreIpcClient.h>
 #include <aws/s3/S3Client.h>
 #include <aws/s3/model/GetObjectRequest.h>
 #include <aws/s3/model/PutObjectRequest.h>
@@ -31,13 +30,25 @@ class S3Client {
   /// \param aws_region The AWS region for the S3 service.
   /// \param credential_endpoint The endpoint URL for requesting temporary AWS credentials.
   /// \param watch_directory The directory to monitor for files to upload.
-  S3Client::S3Client(const std::string &thing_name, const std::string &aws_region,
+  S3Client(const std::string &thing_name, const std::string &aws_region,
                      const std::string &credential_endpoint, const std::string &watch_directory);
 
   /// \brief Destructor for the S3Client class.
   ///
   /// Cleans up resources, stops the upload thread, and shuts down the AWS SDK.
+  ///
   ~S3Client();
+
+  ///
+  /// \brief Uploads a file to the specified S3 bucket.
+  ///
+  /// \param bucket_name The name of the S3 bucket to upload the file to.
+  /// \param file_path The path to the file to upload.
+  /// \return int Status code indicating success or failure.
+  /// \note The file will be deleted after a successful upload.
+  ///
+  int UploadObject(const std::string& bucket_name, const std::string& file_path);
+
 
  private:
   /// \brief Thread function that monitors a directory for files to upload.
@@ -47,29 +58,42 @@ class S3Client {
   /// If uploads fail, files are left in place for retrying later.
   void MainThread();
 
+  ///
+  /// \brief Creates the S3 client for uploading files.
+  /// 
+  /// Initializes the S3 client with the specified credentials and configuration.
+  /// \return int Status code indicating success or failure.
+  ///
+  int CreateClient();
+
   /// \brief Indicates whether the device has internet connectivity and valid AWS credentials.
   ///
   /// When false, uploads are postponed until connectivity is restored.
+  ///
   std::atomic<bool> is_connected_ = false;
 
   /// \brief Flag indicating whether the AWS SDK has been initialized.
   ///
   /// Prevents multiple initialization of the SDK, which can cause issues.
+  ///
   static bool is_sdk_initalized_;
 
   /// \brief Thread that handles the file upload process.
   ///
   /// Runs the MainThread method in a separate thread.
+  ///
   std::unique_ptr<std::thread> upload_thread_;
 
   /// \brief Flag indicating whether the upload thread should continue running.
   ///
   /// Used to safely terminate the thread when the S3Client is destroyed.
+  ///
   std::atomic<bool> is_running_ = true;
 
   /// \brief Client for interacting with AWS S3 service.
   ///
   /// Handles all S3 operations, including file uploads.
+  ///
   std::shared_ptr<Aws::S3::S3Client> s3_client_;
 
   /// \brief Provider for AWS credentials used to authenticate with S3.

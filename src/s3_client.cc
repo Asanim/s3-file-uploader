@@ -1,11 +1,10 @@
 #include "s3_client.h"
 
 #include <fstream>
+#include <iostream>
+#include <filesystem>
 
 #include "key_exchange.h"
-
-using namespace Aws;
-using namespace Aws::Auth;
 
 bool S3Client::is_sdk_initalized_ = false;
 
@@ -47,7 +46,7 @@ void S3Client::MainThread() {
     // if there is no internet connection, sleep for 3 minutes before checking again
     if (!is_connected_) {
       std::this_thread::sleep_for(std::chrono::seconds(3 * 60));
-      is_connected_ = (CreateClient() == sv::Status::kSuccess);
+      is_connected_ = (CreateClient() == 0);
 
       continue;
     }
@@ -64,16 +63,12 @@ void S3Client::MainThread() {
           std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
           // Upload the file
-          if (auto result = S3UploadHandler::UploadFile(bucket_name, file_path); result == sv::Status::kSuccess) {
+          if (auto result = UploadObject(bucket_name, file_path); result == 0) {
             std::string message = "Successfully uploaded file: " + file_path + ". Deleting file.";
 
             // Delete the file after successful upload
             std::filesystem::remove(file_path);
-
-            // Queue success message
-            auto message_payload = ConvertFileUploadRequestStatusToJson(
-                file_path, "Upload successful", sv::Status::kSuccess, std::chrono::system_clock::now());
-          } else if (result == sv::Status::kInvalidParameter) {
+          } else if (result == -2) {
             std::string error_message = "File path was invalid: " + file_path;
             std::cerr << error_message;
             throw std::invalid_argument(error_message);
@@ -82,7 +77,6 @@ void S3Client::MainThread() {
             std::cerr << error_message;
 
             // File remains in the directory for retry on next iteration
-
             is_connected_ = false;
             std::this_thread::sleep_for(std::chrono::seconds(30));
             throw std::invalid_argument(error_message);
@@ -125,4 +119,35 @@ int S3Client::CreateClient() {
     return -1;
   }
   return 0;
+}
+
+int S3Client::UploadObject(const std::string& bucket_name, const std::string& file_path) {
+  const std::string remote_file_key = std::string(thing_name_) + "/" + file_path;
+
+  if (!std::filesystem::exists(file_path)) {
+    std::cerr << "Error: File path does not exist: " << file_path;
+    return -2;
+  }
+  Aws::S3::Model::PutObjectRequest request;
+  request.SetBucket(bucket_name.c_str());
+  request.SetKey(remote_file_key.c_str());
+
+  std::shared_ptr<Aws::IOStream> inputData =
+      std::make_shared<Aws::FStream>(file_path.c_str(), std::ios_base::in | std::ios_base::binary);
+
+  if (!*inputData) {
+    std::cerr << "Error: Unable to read file " << file_path;
+    return -2;
+  }
+
+  request.SetBody(inputData);
+
+  Aws::S3::Model::PutObjectOutcome outcome = s3_client_->PutObject(request);
+  if (!outcome.IsSuccess()) {
+    std::cerr << "Error: UploadObject: " << outcome.GetError().GetMessage();
+    return -1;
+  } else {
+    std::cout << "Uploaded '" << file_path << "' to bucket '" << bucket_name << "' at path: " << remote_file_key;
+    return 0;
+  }
 }
