@@ -40,7 +40,7 @@ const char kCredentialEndpoint[] = "";
 /// \param session_token
 /// \return int
 ///
-int AccessKeysFromTokenExchangeResult(const std::string_view response, std::string *access_key_id,
+int AccessKeysFromTokenExchangeResultJson(const std::string_view response, std::string *access_key_id,
                                          std::string *secret_access_key, std::string *session_token);
 
 ///
@@ -55,7 +55,7 @@ int AccessKeysFromTokenExchangeResult(const std::string_view response, std::stri
 /// \param session_token The session token
 /// \return int
 ///
-int RequestCredentials(const std::string &endpoint_url, const std::string &cert_path, const std::string &key_path,
+int RequestAccessKeysFromCertificates(const std::string &endpoint_url, const std::string &cert_path, const std::string &key_path,
                           const std::string &ca_path, const std::string &thing_name, std::string *access_key_id,
                           std::string *secret_access_key, std::string *session_token);
 
@@ -76,6 +76,7 @@ size_t WriteCallback(char *contents, size_t size, size_t num_members, std::strin
 /// \return std::shared_ptr<Aws::Auth::AWSCredentialsProvider>
 ///
 std::shared_ptr<Aws::Auth::AWSCredentialsProvider> GetAWSCredentialsProviderFromCertificates(
-    const std::string &thing_name);
+  const std::string &thing_name);
+
 
 #endif  // COMMON_H_

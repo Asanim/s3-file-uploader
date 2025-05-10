@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 
 int main(int argc, char **argv)
 {
@@ -8,9 +9,9 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    const Aws::String bucket_name = argv[1];
-    const Aws::String thing_name = argv[2];
-    const Aws::String aws_region = argv[2];
+    const std::string bucket_name = argv[1];
+    const std::string thing_name = argv[2];
+    const std::string aws_region = argv[2];
 
     return 0;
 }

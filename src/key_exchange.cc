@@ -1,5 +1,7 @@
 #include "key_exchange.h"
+
 #include <aws/core/Aws.h>
+#include <curl/curl.h>
 
 #include <array>
 #include <cstdint>
@@ -13,59 +15,47 @@
 #include "rapidjson/writer.h"
 
 // Callback function for handling the response
-size_t WriteCallback(char *contents, size_t size, size_t num_members, std::string *user_data)
-{
+size_t WriteCallback(char *contents, size_t size, size_t num_members, std::string *user_data) {
   user_data->append(contents, size * num_members);
   return size * num_members;
 }
 
-int AccessKeysFromTokenExchangeResult(const std::string_view response, std::string *access_key_id,
-                                         std::string *secret_access_key, std::string *session_token)
-{
+int AccessKeysFromTokenExchangeResultJson(const std::string_view response, std::string *access_key_id,
+                                          std::string *secret_access_key, std::string *session_token) {
   rapidjson::Document document;
   rapidjson::ParseResult ok = document.Parse(response.data());
-  try
-  {
-    if (document.HasParseError())
-    {
+  try {
+    if (document.HasParseError()) {
       std::cerr << "Could not parse JSON, malformed " + std::string(GetParseError_En(ok.Code())) + "()" +
                        std::to_string(ok.Offset()) + ") :" + std::string(response.data());
       return -1;
     }
 
-    if (document.HasMember("credentials") && document["credentials"].IsObject())
-    {
+    if (document.HasMember("credentials") && document["credentials"].IsObject()) {
       const rapidjson::Value &credentials = document["credentials"];
-      if (credentials.HasMember("accessKeyId") && credentials["accessKeyId"].IsString())
-      {
+      if (credentials.HasMember("accessKeyId") && credentials["accessKeyId"].IsString()) {
         *access_key_id = credentials["accessKeyId"].GetString();
       }
-      if (credentials.HasMember("secretAccessKey") && credentials["secretAccessKey"].IsString())
-      {
+      if (credentials.HasMember("secretAccessKey") && credentials["secretAccessKey"].IsString()) {
         *secret_access_key = credentials["secretAccessKey"].GetString();
       }
-      if (credentials.HasMember("sessionToken") && credentials["sessionToken"].IsString())
-      {
+      if (credentials.HasMember("sessionToken") && credentials["sessionToken"].IsString()) {
         *session_token = credentials["sessionToken"].GetString();
       }
       return 0;
-    }
-    else
-    {
+    } else {
       return -1;
     }
-  }
-  catch (const std::invalid_argument &e)
-  {
+  } catch (const std::invalid_argument &e) {
     return -1;
   }
   return 0;
 }
 
-int RequestCredentials(const std::string &endpoint_url, const std::string &cert_path, const std::string &key_path,
-                          const std::string &ca_path, const std::string &thing_name, std::string *access_key_id,
-                          std::string *secret_access_key, std::string *session_token)
-{
+int RequestAccessKeysFromCertificates(const std::string &endpoint_url, const std::string &cert_path,
+                                      const std::string &key_path, const std::string &ca_path,
+                                      const std::string &thing_name, std::string *access_key_id,
+                                      std::string *secret_access_key, std::string *session_token) {
   CURL *curl;
   CURLcode res;
   std::string response;
@@ -73,8 +63,7 @@ int RequestCredentials(const std::string &endpoint_url, const std::string &cert_
   curl_global_init(CURL_GLOBAL_DEFAULT);
   curl = curl_easy_init();
 
-  if (curl)
-  {
+  if (curl) {
     curl_easy_setopt(curl, CURLOPT_URL, endpoint_url.c_str());
 
     curl_easy_setopt(curl, CURLOPT_SSLCERT, cert_path.c_str());
@@ -91,8 +80,7 @@ int RequestCredentials(const std::string &endpoint_url, const std::string &cert_
 
     res = curl_easy_perform(curl);
 
-    if (res != CURLE_OK)
-    {
+    if (res != CURLE_OK) {
       curl_slist_free_all(headers);
       curl_easy_cleanup(curl);
       curl_global_cleanup();
@@ -104,8 +92,7 @@ int RequestCredentials(const std::string &endpoint_url, const std::string &cert_
     curl_easy_cleanup(curl);
     curl_global_cleanup();
 
-
-    AccessKeysFromTokenExchangeResult(response, access_key_id, secret_access_key, session_token);
+    AccessKeysFromTokenExchangeResultJson(response, access_key_id, secret_access_key, session_token);
 
     return 0;
   }
@@ -115,35 +102,25 @@ int RequestCredentials(const std::string &endpoint_url, const std::string &cert_
 }
 
 std::shared_ptr<Aws::Auth::AWSCredentialsProvider> GetAWSCredentialsProviderFromCertificates(
-    const std::string &thing_name, Aws::Client::ClientConfiguration &clientConfig)
-{
+    const std::string &thing_name) {
   std::shared_ptr<Aws::Auth::AWSCredentialsProvider> credentials_provider;
-
-  Aws::SDKOptions options;
-  options.loggingOptions.logLevel = Aws::Utils::Logging::LogLevel::Fatal;
-  Aws::InitAPI(options); 
 
   std::string access_key_id;
   std::string secret_access_key;
   std::string session_token;
 
-  if (int success = RequestCredentials(kCredentialEndpoint, kThingCertPath, kPrivateKeyPath, clientConfig.caFile,
-                                          thing_name, &access_key_id, &secret_access_key, &session_token);
-      success == 0)
-  {
-
+  if (int success =
+          RequestAccessKeysFromCertificates(kCredentialEndpoint, kThingCertPath, kPrivateKeyPath, kRootCAPath,
+                                            thing_name, &access_key_id, &secret_access_key, &session_token);
+      success == 0) {
     credentials_provider = Aws::MakeShared<Aws::Auth::SimpleAWSCredentialsProvider>("alloc-tag", access_key_id,
                                                                                     secret_access_key, session_token);
-  }
-  else
-  {
+  } else {
     return nullptr;
   }
 
-  if (auto aws_credentials = credentials_provider->GetAWSCredentials(); aws_credentials.IsEmpty())
-  {
+  if (auto aws_credentials = credentials_provider->GetAWSCredentials(); aws_credentials.IsEmpty()) {
     return nullptr;
   }
   return credentials_provider;
 }
-
