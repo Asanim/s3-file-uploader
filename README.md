@@ -24,7 +24,7 @@ This repository aims to serve as a guide for those with a similar use case or an
 - Greengrass component packages are typically installed to the `packages-unarchived` folder, which is managed by the Greengrass core software.
 - In this case, instead of using the default Greengrass package installation location, we install a Debian package (`.dpkg`) directly to the system root directory (`/`).
 - Installing to the system root means the package and its files are available system-wide, outside of the Greengrass-managed environment.
-
+- Note how the recipe does not require any specific Greengrass permissions. It does not specifically interact with Greengrass core, only with the certificates of Greengrass itself. Hence, care must be taken when assigning IAM permissions to the host device.
 
 ## Features and Goals
 
