@@ -13,8 +13,8 @@ ExternalProject_Add(aws-sdk-cpp
     -DAUTORUN_UNIT_TESTS=OFF
     -DBUILD_ONLY=s3
     -DBUILD_SHARED_LIBS=ON
-    -DCMAKE_INSTALL_PREFIX=
     -DCMAKE_PREFIX_PATH=${CMAKE_BINARY_DIR}/external/install
+    -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/external/install
     -DCMAKE_BUILD_TYPE=Release
     -DUSE_OPENSSL=ON
 
