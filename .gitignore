@@ -1,2 +1,7 @@
 backdate*
-build*
+build/
+
+.vscode/
+archive/
+
+scripts/AmazonRootCA1.pem

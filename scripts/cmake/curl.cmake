@@ -1,8 +1,8 @@
 include(ExternalProject)
 
-message(STATUS "Added libcurl to external submodules")
+message(STATUS "Added curl to external submodules")
 # ------------------------------------------------------------------------------
-# libcurl
+# curl
 # ------------------------------------------------------------------------------
 ExternalProject_Add(
     libcurl
@@ -18,14 +18,14 @@ ExternalProject_Add(
         -DOPENSSL_INCLUDE_DIR=${CMAKE_BINARY_DIR}/external/install/include
         -DOPENSSL_CRYPTO_LIBRARY=${CMAKE_BINARY_DIR}/external/install/lib/libcrypto.so
         -DOPENSSL_SSL_LIBRARY=${CMAKE_BINARY_DIR}/external/install/lib/libssl.so
-    PREFIX ${CMAKE_BINARY_DIR}/external/libcurl/prefix
-    TMP_DIR ${CMAKE_BINARY_DIR}/external/libcurl/tmp
-    STAMP_DIR ${CMAKE_BINARY_DIR}/external/libcurl/stamp
-    DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/external/libcurl/download
-    SOURCE_DIR ${CMAKE_BINARY_DIR}/external/libcurl/src
-    BINARY_DIR ${CMAKE_BINARY_DIR}/external/libcurl/build
+    PREFIX ${CMAKE_BINARY_DIR}/external/curl/prefix
+    TMP_DIR ${CMAKE_BINARY_DIR}/external/curl/tmp
+    STAMP_DIR ${CMAKE_BINARY_DIR}/external/curl/stamp
+    DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/external/curl/download
+    SOURCE_DIR ${CMAKE_BINARY_DIR}/external/curl/src
+    BINARY_DIR ${CMAKE_BINARY_DIR}/external/curl/build
     UPDATE_DISCONNECTED 1
     BUILD_ALWAYS 0
 )
 
-add_dependencies(libcurl zlib)
+add_dependencies(libcurl openssl zlib)

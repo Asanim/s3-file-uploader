@@ -1,0 +1,34 @@
+{
+    "RecipeFormatVersion": "2020-01-25",
+    "ComponentName": "$COMPONENT_NAME",
+    "ComponentVersion": "$COMPONENT_VERSION",
+    "ComponentDescription": "S3 File Uploader",
+    "ComponentPublisher": "$COMPONENT_AUTHOR",
+    "ComponentConfiguration": {
+        "DefaultConfiguration": {}
+    },
+    "Manifests": [
+        {
+            "Platform": {
+                "os": "linux",
+                "architecture": "x86"
+            },
+            "Artifacts": [
+                {
+                    "URI": "s3://$BUCKET_NAME_FULL/$COMPONENT_NAME/$COMPONENT_VERSION/s3-file-uploader_1.0.0_x86_64.deb",
+                    "Unarchive": "NONE"
+                }
+            ],
+            "Lifecycle": {
+                "bootstrap": {
+                    "Script": "dpkg -i {artifacts:path}/s3-file-uploader_1.0.0_x86_64.deb",
+                    "BootstrapOnRollback": "false",
+                    "RequiresPrivilege": "true"
+                },
+                "Run": {
+                    "Script": "s3-file-uploader"
+                }
+            }
+        }
+    ]
+}
